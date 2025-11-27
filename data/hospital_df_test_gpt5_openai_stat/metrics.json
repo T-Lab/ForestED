@@ -1,0 +1,249 @@
+{
+  "overall": {
+    "accuracy": 0.9787058823529412,
+    "precision": 0.8438438438438438,
+    "recall": 0.6853658536585366,
+    "f1": 0.7563930013458949,
+    "tp": 562,
+    "fp": 104,
+    "fn": 258,
+    "tn": 16076
+  },
+  "per_column": {
+    "ProviderNumber": {
+      "accuracy": 1.0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "tp": 28,
+      "fp": 0,
+      "fn": 0,
+      "tn": 972
+    },
+    "HospitalName": {
+      "accuracy": 0.998,
+      "precision": 1.0,
+      "recall": 0.9166666666666666,
+      "f1": 0.9565217391304348,
+      "tp": 22,
+      "fp": 0,
+      "fn": 2,
+      "tn": 976
+    },
+    "Address": {
+      "accuracy": 0.996,
+      "precision": 1.0,
+      "recall": 0.8709677419354839,
+      "f1": 0.9310344827586207,
+      "tp": 27,
+      "fp": 0,
+      "fn": 4,
+      "tn": 969
+    },
+    "City": {
+      "accuracy": 1.0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "tp": 33,
+      "fp": 0,
+      "fn": 0,
+      "tn": 967
+    },
+    "State": {
+      "accuracy": 0.974,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0,
+      "tp": 0,
+      "fp": 0,
+      "fn": 26,
+      "tn": 974
+    },
+    "ZipCode": {
+      "accuracy": 0.97,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0,
+      "tp": 0,
+      "fp": 0,
+      "fn": 30,
+      "tn": 970
+    },
+    "CountyName": {
+      "accuracy": 0.97,
+      "precision": 1.0,
+      "recall": 0.5,
+      "f1": 0.6666666666666666,
+      "tp": 30,
+      "fp": 0,
+      "fn": 30,
+      "tn": 940
+    },
+    "PhoneNumber": {
+      "accuracy": 0.999,
+      "precision": 1.0,
+      "recall": 0.9705882352941176,
+      "f1": 0.9850746268656716,
+      "tp": 33,
+      "fp": 0,
+      "fn": 1,
+      "tn": 966
+    },
+    "HospitalType": {
+      "accuracy": 1.0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "tp": 32,
+      "fp": 0,
+      "fn": 0,
+      "tn": 968
+    },
+    "HospitalOwner": {
+      "accuracy": 0.998,
+      "precision": 1.0,
+      "recall": 0.9259259259259259,
+      "f1": 0.9615384615384615,
+      "tp": 25,
+      "fp": 0,
+      "fn": 2,
+      "tn": 973
+    },
+    "EmergencyService": {
+      "accuracy": 1.0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "tp": 27,
+      "fp": 0,
+      "fn": 0,
+      "tn": 973
+    },
+    "Condition": {
+      "accuracy": 0.968,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0,
+      "tp": 0,
+      "fp": 0,
+      "fn": 32,
+      "tn": 968
+    },
+    "MeasureCode": {
+      "accuracy": 0.992,
+      "precision": 0.7837837837837838,
+      "recall": 1.0,
+      "f1": 0.8787878787878788,
+      "tp": 29,
+      "fp": 8,
+      "fn": 0,
+      "tn": 963
+    },
+    "MeasureName": {
+      "accuracy": 0.958,
+      "precision": 0.6486486486486487,
+      "recall": 0.96,
+      "f1": 0.7741935483870968,
+      "tp": 72,
+      "fp": 39,
+      "fn": 3,
+      "tn": 886
+    },
+    "Score": {
+      "accuracy": 0.892,
+      "precision": 0.9456521739130435,
+      "recall": 0.45789473684210524,
+      "f1": 0.6170212765957447,
+      "tp": 87,
+      "fp": 5,
+      "fn": 103,
+      "tn": 805
+    },
+    "Sample": {
+      "accuracy": 0.976,
+      "precision": 1.0,
+      "recall": 0.7913043478260869,
+      "f1": 0.883495145631068,
+      "tp": 91,
+      "fp": 0,
+      "fn": 24,
+      "tn": 885
+    },
+    "Stateavg": {
+      "accuracy": 0.947,
+      "precision": 0.3333333333333333,
+      "recall": 0.9629629629629629,
+      "f1": 0.4952380952380952,
+      "tp": 26,
+      "fp": 52,
+      "fn": 1,
+      "tn": 921
+    }
+  },
+  "llm_usage": {
+    "per_partition": [
+      {
+        "partition_id": 0,
+        "tokens": {
+          "prompt": 10879,
+          "completion": 21979,
+          "total": 32858
+        },
+        "llm_time": 370.5477788448334,
+        "gnn_time": 9.850800037384033
+      },
+      {
+        "partition_id": 1,
+        "tokens": {
+          "prompt": 10793,
+          "completion": 19481,
+          "total": 30274
+        },
+        "llm_time": 345.0206322669983,
+        "gnn_time": 11.876132011413574
+      },
+      {
+        "partition_id": 2,
+        "tokens": {
+          "prompt": 10823,
+          "completion": 29459,
+          "total": 40282
+        },
+        "llm_time": 547.3207905292511,
+        "gnn_time": 8.118210792541504
+      },
+      {
+        "partition_id": 3,
+        "tokens": {
+          "prompt": 10825,
+          "completion": 22318,
+          "total": 33143
+        },
+        "llm_time": 517.7705738544464,
+        "gnn_time": 12.00368332862854
+      },
+      {
+        "partition_id": 4,
+        "tokens": {
+          "prompt": 10877,
+          "completion": 29395,
+          "total": 40272
+        },
+        "llm_time": 596.1744472980499,
+        "gnn_time": 11.787478685379028
+      }
+    ],
+    "total_tokens": 176829,
+    "total_prompt": 54197,
+    "total_completion": 122632,
+    "total_time_sec": 2376.834222793579
+  },
+  "gnn_usage": {
+    "total_time_sec": 53.63630485534668
+  },
+  "consensus_usage": {
+    "strategy": "dawid_skene",
+    "time_sec": 96.53393840789795
+  }
+}

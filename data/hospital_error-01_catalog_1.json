@@ -1,0 +1,2198 @@
+{
+  "ProviderNumber": {
+    "dataType": "string",
+    "isCategorical": true,
+    "distinctionPercentage": 0.072,
+    "missingPercentage": 0.0,
+    "inDeps": [],
+    "similarities": [
+      [
+        "City",
+        0.3446545120495583
+      ],
+      [
+        "MeasureName",
+        0.2239498206557156
+      ],
+      [
+        "Sample",
+        0.19015969963452417
+      ],
+      [
+        "PhoneNumber",
+        0.15618351004881367
+      ],
+      [
+        "Stateavg",
+        0.1315732053023703
+      ]
+    ],
+    "correlations": [
+      [
+        "HospitalName",
+        0.8046375929635838
+      ],
+      [
+        "PhoneNumber",
+        0.7876240802973739
+      ],
+      [
+        "Address",
+        0.7875605690392676
+      ],
+      [
+        "ZipCode",
+        0.7844094127645612
+      ],
+      [
+        "City",
+        0.7337000062763326
+      ],
+      [
+        "CountyName",
+        0.7105418843611394
+      ],
+      [
+        "State",
+        0.6173697470309426
+      ],
+      [
+        "HospitalOwner",
+        0.5429432593031436
+      ],
+      [
+        "EmergencyService",
+        0.48269973039941794
+      ],
+      [
+        "Stateavg",
+        0.2997258968372004
+      ]
+    ],
+    "samples": [
+      "10018",
+      "10019",
+      "1xx19",
+      "10001",
+      "10005",
+      "x0005",
+      "10006",
+      "1000x",
+      "10007",
+      "10008",
+      "10009",
+      "10010",
+      "10011",
+      "x00xx",
+      "10012",
+      "x00x5",
+      "10015",
+      "1xx15",
+      "10016",
+      "1xx16",
+      "10038",
+      "100x8",
+      "10055",
+      "10056",
+      "10085",
+      "10086",
+      "100x6",
+      "10087",
+      "10108",
+      "x0x08",
+      "10158",
+      "10164",
+      "20017",
+      "20018",
+      "10021",
+      "10022",
+      "10023",
+      "10024",
+      "1xx24",
+      "10025",
+      "10027",
+      "x0027",
+      "10029",
+      "x0029",
+      "1xx29",
+      "10032",
+      "1xx32",
+      "10033",
+      "10034",
+      "100x4",
+      "10035",
+      "100x5",
+      "1xx35",
+      "10036",
+      "1xx36",
+      "10039",
+      "1003x",
+      "1xx39",
+      "100x9",
+      "10040",
+      "10043",
+      "10044",
+      "1xx44",
+      "10045",
+      "1xx45",
+      "x0045",
+      "10046",
+      "10047",
+      "1xx47",
+      "1004x",
+      "10049",
+      "10050"
+    ],
+    "statistics": {}
+  },
+  "HospitalName": {
+    "dataType": "string",
+    "isCategorical": true,
+    "distinctionPercentage": 0.069,
+    "missingPercentage": 0.0,
+    "inDeps": [],
+    "similarities": [
+      [
+        "Address",
+        0.24766376004338594
+      ],
+      [
+        "City",
+        0.16938100897214392
+      ],
+      [
+        "Stateavg",
+        0.15351229028647906
+      ],
+      [
+        "CountyName",
+        0.12103837897554742
+      ],
+      [
+        "MeasureName",
+        0.10293171086788828
+      ]
+    ],
+    "correlations": [
+      [
+        "Address",
+        0.8136881442024451
+      ],
+      [
+        "PhoneNumber",
+        0.8073846656617433
+      ],
+      [
+        "ZipCode",
+        0.8049950953767127
+      ],
+      [
+        "ProviderNumber",
+        0.8046375929635838
+      ],
+      [
+        "City",
+        0.7593511470429788
+      ],
+      [
+        "CountyName",
+        0.7156625144800721
+      ],
+      [
+        "State",
+        0.6271197265731628
+      ],
+      [
+        "HospitalOwner",
+        0.5429650677975408
+      ],
+      [
+        "EmergencyService",
+        0.5006951175133222
+      ],
+      [
+        "HospitalType",
+        0.37425550793483986
+      ]
+    ],
+    "samples": [
+      "callahan eye foundation hospital",
+      "helen keller memorial hospital",
+      "southeast alabama medical center",
+      "southeast alabama medxcal center",
+      "marshall medical center south",
+      "eliza coffee memorial hospital",
+      "mizell memorial hospital",
+      "crenshaw community hospital",
+      "crenshaw cxmmunity hxspital",
+      "hartselle medical center",
+      "marshall medical center north",
+      "marshall medical cenxer norxh",
+      "st vincents east",
+      "dekalb regional medical center",
+      "dexalb regional medical center",
+      "southwest alabama medical center",
+      "shelby baptist medical center",
+      "stringfellow memorial hospital",
+      "flowers hospital",
+      "floxers hospital",
+      "st vincents hospital",
+      "decatur general hospital",
+      "northwest medical center",
+      "univ of south alabama medical center",
+      "univ ox south alabama medical center",
+      "xniv of soxth alabama medical center",
+      "prattville baptist hospital",
+      "russellville hospital",
+      "coosa valley medical center",
+      "alaska regional hospital",
+      "xlxskx regionxl hospitxl",
+      "yukon kuskokwim delta reg hospital",
+      "dale medical center",
+      "cherokee medical center",
+      "baptist medical center south",
+      "baptist medical cexter south",
+      "jackson hospital & clinic inc",
+      "jaxkson hospital & xlinix inx",
+      "g h lanier memorial hospital",
+      "elba general hospital",
+      "east alabama medical center and snf",
+      "wedowee hospital",
+      "wedowee hosxital",
+      "university of alabama hospital",
+      "community hospital inc",
+      "communitx hospital inc",
+      "communixy hospixal inc",
+      "cullman regional medical center",
+      "cullmxn regionxl medicxl center",
+      "andalusia regional hospital",
+      "andaxusia regionax hospitax",
+      "andaluxia regional hoxpital",
+      "huntsville hospital",
+      "huntsvxlle hospxtal",
+      "gadsden regional medical center",
+      "chilton medical center",
+      "marion regional medical center",
+      "fayette medical center",
+      "riverview regional medical center",
+      "rivxrvixw rxgional mxdical cxntxr",
+      "xivexview xegional medical centex",
+      "riverview rexional medical center",
+      "georgiana hospital",
+      "georgiaxa hospital",
+      "medical center enterprise",
+      "medixal xenter enterprise",
+      "medxcal center enterprxse",
+      "st vincents blount",
+      "st vincents bxount"
+    ],
+    "statistics": {}
+  },
+  "Address": {
+    "dataType": "string",
+    "isCategorical": true,
+    "distinctionPercentage": 0.076,
+    "missingPercentage": 0.0,
+    "inDeps": [],
+    "similarities": [
+      [
+        "HospitalName",
+        0.24766376004338594
+      ],
+      [
+        "Stateavg",
+        0.19295274775462248
+      ],
+      [
+        "PhoneNumber",
+        0.18915978821412455
+      ],
+      [
+        "MeasureName",
+        0.18912586304618692
+      ],
+      [
+        "ZipCode",
+        0.1681943116965303
+      ]
+    ],
+    "correlations": [
+      [
+        "HospitalName",
+        0.8136881442024451
+      ],
+      [
+        "PhoneNumber",
+        0.789535364173813
+      ],
+      [
+        "ProviderNumber",
+        0.7875605690392676
+      ],
+      [
+        "ZipCode",
+        0.7846512676580109
+      ],
+      [
+        "City",
+        0.7432109288872727
+      ],
+      [
+        "CountyName",
+        0.7211827573970254
+      ],
+      [
+        "State",
+        0.6007206530520048
+      ],
+      [
+        "HospitalOwner",
+        0.5430056578749658
+      ],
+      [
+        "EmergencyService",
+        0.49826430361560503
+      ],
+      [
+        "HospitalType",
+        0.37364909973448474
+      ]
+    ],
+    "samples": [
+      "1720 university blvd",
+      "1300 south montgomery avenue",
+      "1108 ross clark circle",
+      "2505 u s highway 431 north",
+      "2505xuxsxhighwayx431xnorth",
+      "205 marengo street",
+      "702xnxmainxst",
+      "702 n main st",
+      "702 x maix st",
+      "101 hospital circle",
+      "201 pine street northwest",
+      "201 pine sxreex norxhwesx",
+      "8000 alabama highway 69",
+      "8000 alabama xigxway 69",
+      "50 medical park east drive",
+      "200 med center drive",
+      "33700 highway 43",
+      "33700 hxghway 43",
+      "33700 highway x3",
+      "1000 first street north",
+      "1000 fixst stxeet noxth",
+      "1720 univxrsity blvd",
+      "301 east 18th st",
+      "301xeastx18thxst",
+      "4370 west main street",
+      "4370xwestxmainxstreet",
+      "810 st vincents drive",
+      "810 st vxncents drxve",
+      "1201 7th street se",
+      "1530 u s highway 43",
+      "1530xuxsxhighwayx43",
+      "2451 fillingim street",
+      "124 s memorial dr",
+      "124xsxmemorialxdr",
+      "124 s mxmorial dr",
+      "15155 highway 43",
+      "315 w hickory st",
+      "315 w hickxry st",
+      "315xwxhickoryxst",
+      "2801 debarr road",
+      "po box 287",
+      "poxboxx287",
+      "126 hospital ave",
+      "126xhospitalxave",
+      "1x6 hospital ave",
+      "400 northwood dr",
+      "2105 east south boulevard",
+      "1725 pine street",
+      "4800 48th st",
+      "987 drayton street",
+      "2000 pepperell parkway",
+      "209 north main street",
+      "209 xorth maix street",
+      "619 south 19th street",
+      "805 friendship road",
+      "1912 alabama highway 157",
+      "1912xalabamaxhighwayx157",
+      "849 south three notch street",
+      "301 east 1xth st",
+      "101 sivley rd",
+      "1007 goodyear avenue",
+      "1010 lay dam road",
+      "x0x0 lay dam road",
+      "1256 military street south",
+      "1256 military street sxuth",
+      "1653 temple avenue north",
+      "600 south third street",
+      "600 souxh xhird sxreex",
+      "515 miranda st",
+      "515 miranda sx",
+      "515 miranxa st",
+      "515 mirxndx st",
+      "400 n edwards street",
+      "400xnxedwardsxstreet",
+      "150 gilbreath drive",
+      "150 gilxreath drive"
+    ],
+    "statistics": {}
+  },
+  "City": {
+    "dataType": "string",
+    "isCategorical": true,
+    "distinctionPercentage": 0.072,
+    "missingPercentage": 0.0,
+    "inDeps": [],
+    "similarities": [
+      [
+        "ProviderNumber",
+        0.3446545120495583
+      ],
+      [
+        "MeasureName",
+        0.2785688915356718
+      ],
+      [
+        "HospitalName",
+        0.16938100897214392
+      ],
+      [
+        "Sample",
+        0.16435090520910228
+      ],
+      [
+        "CountyName",
+        0.15902651980154497
+      ]
+    ],
+    "correlations": [
+      [
+        "HospitalName",
+        0.7593511470429788
+      ],
+      [
+        "PhoneNumber",
+        0.7526195880047569
+      ],
+      [
+        "Address",
+        0.7432109288872727
+      ],
+      [
+        "ZipCode",
+        0.7428486332017906
+      ],
+      [
+        "CountyName",
+        0.7414115556905204
+      ],
+      [
+        "ProviderNumber",
+        0.7337000062763325
+      ],
+      [
+        "State",
+        0.6260921804824614
+      ],
+      [
+        "HospitalOwner",
+        0.508429721255631
+      ],
+      [
+        "EmergencyService",
+        0.47504411480590025
+      ],
+      [
+        "Stateavg",
+        0.295712024018251
+      ]
+    ],
+    "samples": [
+      "birmingham",
+      "birminghxm",
+      "birmingxam",
+      "sheffield",
+      "sheffxeld",
+      "dothan",
+      "boaz",
+      "boxz",
+      "florence",
+      "fxorence",
+      "florxncx",
+      "flxrence",
+      "opp",
+      "luverne",
+      "hartselle",
+      "guntersville",
+      "guntxrsvillx",
+      "birmixgham",
+      "bxrmxngham",
+      "fort payne",
+      "fort payxe",
+      "thomasville",
+      "alabaster",
+      "axxistox",
+      "anniston",
+      "decatur",
+      "winfield",
+      "winfielx",
+      "mobile",
+      "prattville",
+      "russellville",
+      "sylacauga",
+      "anchorage",
+      "anchoraxe",
+      "bethel",
+      "ozark",
+      "ozarx",
+      "xzark",
+      "centre",
+      "montgomery",
+      "montxomery",
+      "valley",
+      "vallex",
+      "vxlley",
+      "elba",
+      "exba",
+      "opelika",
+      "wedowee",
+      "wxdowxx",
+      "birminxham",
+      "tallassee",
+      "tallaxxee",
+      "cullman",
+      "cuxxman",
+      "andalusia",
+      "andaluxia",
+      "annxston",
+      "huntsville",
+      "gadsden",
+      "gxdsden",
+      "clanton",
+      "hamilton",
+      "hamilxon",
+      "fayette",
+      "faxette",
+      "georgiana",
+      "geoxgiana",
+      "enterprise",
+      "enterprxse",
+      "xntxrprisx",
+      "oneonta",
+      "onxonta"
+    ],
+    "statistics": {}
+  },
+  "State": {
+    "dataType": "string",
+    "isCategorical": true,
+    "distinctionPercentage": 0.004,
+    "missingPercentage": 0.0,
+    "inDeps": [],
+    "similarities": [
+      [
+        "MeasureCode",
+        0.3699372394318277
+      ],
+      [
+        "Address",
+        0.011030223507195963
+      ],
+      [
+        "Sample",
+        0.003397720139223034
+      ],
+      [
+        "MeasureName",
+        0.001969621886057532
+      ],
+      [
+        "ZipCode",
+        0.0016340055239544803
+      ]
+    ],
+    "correlations": [
+      [
+        "PhoneNumber",
+        0.6568887070286444
+      ],
+      [
+        "HospitalName",
+        0.6271197265731628
+      ],
+      [
+        "City",
+        0.6260921804824614
+      ],
+      [
+        "Stateavg",
+        0.6232307438775988
+      ],
+      [
+        "ProviderNumber",
+        0.6173697470309426
+      ],
+      [
+        "ZipCode",
+        0.6013141801468257
+      ],
+      [
+        "Address",
+        0.6007206530520048
+      ],
+      [
+        "CountyName",
+        0.5983632629409116
+      ],
+      [
+        "MeasureName",
+        0.28872955117990984
+      ],
+      [
+        "HospitalOwner",
+        0.2861795557464061
+      ]
+    ],
+    "samples": [
+      "al",
+      "xl",
+      "ax",
+      "ak"
+    ],
+    "statistics": {}
+  },
+  "ZipCode": {
+    "dataType": "string",
+    "isCategorical": true,
+    "distinctionPercentage": 0.071,
+    "missingPercentage": 0.0,
+    "inDeps": [],
+    "similarities": [
+      [
+        "Address",
+        0.1681943116965303
+      ],
+      [
+        "City",
+        0.14543454412895415
+      ],
+      [
+        "PhoneNumber",
+        0.14349306676945905
+      ],
+      [
+        "MeasureName",
+        0.133526354425058
+      ],
+      [
+        "ProviderNumber",
+        0.12391019934092674
+      ]
+    ],
+    "correlations": [
+      [
+        "HospitalName",
+        0.8049950953767127
+      ],
+      [
+        "Address",
+        0.7846512676580109
+      ],
+      [
+        "PhoneNumber",
+        0.7846231062919246
+      ],
+      [
+        "ProviderNumber",
+        0.7844094127645613
+      ],
+      [
+        "City",
+        0.7428486332017906
+      ],
+      [
+        "CountyName",
+        0.7103573047970781
+      ],
+      [
+        "State",
+        0.6013141801468256
+      ],
+      [
+        "HospitalOwner",
+        0.548241851389742
+      ],
+      [
+        "EmergencyService",
+        0.5123445027467164
+      ],
+      [
+        "HospitalType",
+        0.28971910192177197
+      ]
+    ],
+    "samples": [
+      "35233",
+      "35660",
+      "36302",
+      "x5957",
+      "35957",
+      "3595x",
+      "35631",
+      "3563x",
+      "36467",
+      "36049",
+      "36x49",
+      "360x9",
+      "35640",
+      "3x640",
+      "35976",
+      "35235",
+      "3x23x",
+      "35968",
+      "359x8",
+      "36784",
+      "x6784",
+      "35007",
+      "3x007",
+      "x5007",
+      "36201",
+      "36x01",
+      "36305",
+      "3x305",
+      "x6x05",
+      "35205",
+      "35609",
+      "35594",
+      "3xx94",
+      "36617",
+      "36067",
+      "3x0x7",
+      "35653",
+      "35150",
+      "x5150",
+      "3x1x0",
+      "99508",
+      "99559",
+      "36360",
+      "x6x60",
+      "35960",
+      "x5960",
+      "36116",
+      "36106",
+      "3x10x",
+      "36854",
+      "36323",
+      "36801",
+      "36278",
+      "3x233",
+      "x52xx",
+      "36078",
+      "36x78",
+      "35058",
+      "36420",
+      "3642x",
+      "35801",
+      "35903",
+      "x590x",
+      "35045",
+      "35570",
+      "35555",
+      "35901",
+      "3590x",
+      "36033",
+      "36330",
+      "35121"
+    ],
+    "statistics": {}
+  },
+  "CountyName": {
+    "dataType": "string",
+    "isCategorical": true,
+    "distinctionPercentage": 0.065,
+    "missingPercentage": 0.0,
+    "inDeps": [],
+    "similarities": [
+      [
+        "City",
+        0.15902651980154497
+      ],
+      [
+        "PhoneNumber",
+        0.15769734076358738
+      ],
+      [
+        "MeasureName",
+        0.14795417376355635
+      ],
+      [
+        "Address",
+        0.12444263522795844
+      ],
+      [
+        "HospitalName",
+        0.12103837897554742
+      ]
+    ],
+    "correlations": [
+      [
+        "City",
+        0.7414115556905204
+      ],
+      [
+        "Address",
+        0.7211827573970254
+      ],
+      [
+        "HospitalName",
+        0.7156625144800721
+      ],
+      [
+        "PhoneNumber",
+        0.7105607459703235
+      ],
+      [
+        "ProviderNumber",
+        0.7105418843611394
+      ],
+      [
+        "ZipCode",
+        0.7103573047970781
+      ],
+      [
+        "State",
+        0.5983632629409115
+      ],
+      [
+        "HospitalOwner",
+        0.5473974349987697
+      ],
+      [
+        "EmergencyService",
+        0.47401121881392566
+      ],
+      [
+        "Score",
+        0.2954948146153555
+      ]
+    ],
+    "samples": [
+      "jefferson",
+      "houston",
+      "marshall",
+      "mxrshxll",
+      "lauderdale",
+      "laudxrdalx",
+      "laudexdale",
+      "covington",
+      "crenshaw",
+      "crxnshaw",
+      "morgan",
+      "jeffersxn",
+      "de kalb",
+      "dx kalb",
+      "xe kalb",
+      "clarke",
+      "xlarke",
+      "shelby",
+      "calhoun",
+      "calhoxn",
+      "caxhoun",
+      "housxon",
+      "marion",
+      "mobile",
+      "autauga",
+      "franklin",
+      "talladega",
+      "tallaxega",
+      "anchorage",
+      "bethel",
+      "jxffxrson",
+      "xefferson",
+      "jexxerson",
+      "dale",
+      "cherokee",
+      "chxrokxx",
+      "montgomery",
+      "monxgomery",
+      "montgomexy",
+      "chambers",
+      "xhambers",
+      "chaxbers",
+      "coffee",
+      "coffxx",
+      "lee",
+      "xee",
+      "randolph",
+      "elmore",
+      "elmoxe",
+      "elxore",
+      "cullman",
+      "cxllman",
+      "coxington",
+      "madison",
+      "madisxn",
+      "madisox",
+      "etowah",
+      "chilton",
+      "fayette",
+      "fayexxe",
+      "etowxh",
+      "butler",
+      "butxer",
+      "cxffee",
+      "blount"
+    ],
+    "statistics": {}
+  },
+  "PhoneNumber": {
+    "dataType": "string",
+    "isCategorical": true,
+    "distinctionPercentage": 0.074,
+    "missingPercentage": 0.0,
+    "inDeps": [],
+    "similarities": [
+      [
+        "Address",
+        0.18915978821412455
+      ],
+      [
+        "CountyName",
+        0.15769734076358738
+      ],
+      [
+        "ProviderNumber",
+        0.15618351004881367
+      ],
+      [
+        "Condition",
+        0.15077309626798144
+      ],
+      [
+        "MeasureName",
+        0.1460142010489332
+      ]
+    ],
+    "correlations": [
+      [
+        "HospitalName",
+        0.8073846656617433
+      ],
+      [
+        "Address",
+        0.789535364173813
+      ],
+      [
+        "ProviderNumber",
+        0.7876240802973739
+      ],
+      [
+        "ZipCode",
+        0.7846231062919246
+      ],
+      [
+        "City",
+        0.7526195880047569
+      ],
+      [
+        "CountyName",
+        0.7105607459703235
+      ],
+      [
+        "State",
+        0.6568887070286445
+      ],
+      [
+        "HospitalOwner",
+        0.6084316801073054
+      ],
+      [
+        "EmergencyService",
+        0.5014541825884743
+      ],
+      [
+        "Score",
+        0.2691591440905028
+      ]
+    ],
+    "samples": [
+      "2053258100",
+      "2563864556",
+      "3347938701",
+      "334793870x",
+      "xx479x8701",
+      "2565938310",
+      "2x6x938310",
+      "2565x38310",
+      "2567688400",
+      "3344933541",
+      "3344x33541",
+      "3343353374",
+      "2567736511",
+      "2565718000",
+      "2058383122",
+      "2058x8x122",
+      "2568453150",
+      "2568453x50",
+      "3346366221",
+      "xx46x66221",
+      "334x3xx221",
+      "2056208100",
+      "2562358900",
+      "256235x900",
+      "3347935000",
+      "xx479x5000",
+      "2059397000",
+      "2563412000",
+      "2054877736",
+      "2514717110",
+      "25x47x7xx0",
+      "3343614267",
+      "33x361x267",
+      "2563321611",
+      "2562495000",
+      "9072761131",
+      "9075436300",
+      "3347742601",
+      "334774x601",
+      "2569275531",
+      "3342xx2100",
+      "3342882100",
+      "3342938000",
+      "3342938xxx",
+      "33x2938000",
+      "3347561400",
+      "334x561400",
+      "3348972257",
+      "33x8972257",
+      "3347493411",
+      "2563572111",
+      "20593xx011",
+      "2059344011",
+      "3342836541",
+      "334x836541",
+      "33x28365x1",
+      "2567372000",
+      "3342228466",
+      "334xxx8466",
+      "33422284xx",
+      "2562651000",
+      "2564944000",
+      "2564944xxx",
+      "2057552500",
+      "2059216200",
+      "x059x16x00",
+      "20x9216200",
+      "2059325966",
+      "x0593x5966",
+      "2565435200",
+      "x565435x00",
+      "3343762205",
+      "3343470584",
+      "2052743000"
+    ],
+    "statistics": {}
+  },
+  "HospitalType": {
+    "dataType": "string",
+    "isCategorical": true,
+    "distinctionPercentage": 0.013,
+    "missingPercentage": 0.0,
+    "inDeps": [],
+    "similarities": [
+      [
+        "Address",
+        0.10302542536200555
+      ],
+      [
+        "Stateavg",
+        0.0996755700379402
+      ],
+      [
+        "ZipCode",
+        0.08196532126886809
+      ],
+      [
+        "City",
+        0.07031610002996709
+      ],
+      [
+        "MeasureName",
+        0.023120170863101763
+      ]
+    ],
+    "correlations": [
+      [
+        "MeasureName",
+        0.38176303878306134
+      ],
+      [
+        "HospitalName",
+        0.37425550793483986
+      ],
+      [
+        "Address",
+        0.3736490997344848
+      ],
+      [
+        "HospitalOwner",
+        0.29657966721191253
+      ],
+      [
+        "ProviderNumber",
+        0.29047662398002744
+      ],
+      [
+        "ZipCode",
+        0.289719101921772
+      ],
+      [
+        "City",
+        0.2341925876515679
+      ],
+      [
+        "Score",
+        0.23226842225619565
+      ],
+      [
+        "Condition",
+        0.22071879876337078
+      ],
+      [
+        "Stateavg",
+        0.22048039930165933
+      ]
+    ],
+    "samples": [
+      "acute care hospitals",
+      "acuxe care hospixals",
+      "acxte care hospitals",
+      "acute care hosxitals",
+      "acutx carx hospitals",
+      "acutexcarexhospitals",
+      "acute care hospitaxs",
+      "acute caxe hospitals",
+      "acute care hxspitals",
+      "acute cxre hospitxls",
+      "axute care hospitals",
+      "acute care hoxpitalx",
+      "acute xare hospitals"
+    ],
+    "statistics": {}
+  },
+  "HospitalOwner": {
+    "dataType": "string",
+    "isCategorical": true,
+    "distinctionPercentage": 0.027,
+    "missingPercentage": 0.0,
+    "inDeps": [],
+    "similarities": [
+      [
+        "PhoneNumber",
+        0.09013132117601605
+      ],
+      [
+        "MeasureCode",
+        0.0888800634062174
+      ],
+      [
+        "Address",
+        0.08354865886164385
+      ],
+      [
+        "HospitalName",
+        0.08340454357514591
+      ],
+      [
+        "MeasureName",
+        0.07668479155381853
+      ]
+    ],
+    "correlations": [
+      [
+        "PhoneNumber",
+        0.6084316801073054
+      ],
+      [
+        "ZipCode",
+        0.5482418513897419
+      ],
+      [
+        "CountyName",
+        0.5473974349987697
+      ],
+      [
+        "Address",
+        0.5430056578749658
+      ],
+      [
+        "HospitalName",
+        0.5429650677975408
+      ],
+      [
+        "ProviderNumber",
+        0.5429432593031436
+      ],
+      [
+        "City",
+        0.508429721255631
+      ],
+      [
+        "HospitalType",
+        0.2965796672119125
+      ],
+      [
+        "State",
+        0.2861795557464061
+      ],
+      [
+        "Score",
+        0.2828572597899764
+      ]
+    ],
+    "samples": [
+      "voluntary non-profit - private",
+      "government - hospital district or authority",
+      "government - hospxtal dxstrxct or authorxty",
+      "government - hospital xistrict or authority",
+      "governmenx - hospixal disxricx or auxhorixy",
+      "gxvernment - hxspital district xr authxrity",
+      "voluntary non-profit - other",
+      "volunxary non-profix - privaxe",
+      "government - federal",
+      "proprietary",
+      "pxopxietaxy",
+      "proxrietary",
+      "xroprietary",
+      "voluntary nonxprofit x private",
+      "voluntary non-profit - church",
+      "voluntaryxnon-profitx-xchurch",
+      "voxuntary non-profit - church",
+      "governxent - federal",
+      "prxprietary",
+      "government - state",
+      "voluntaryxnon-profitx-xprivate",
+      "volxntary non-profit - chxrch",
+      "voluntary non-profit - otxer",
+      "government - local",
+      "goverxmext - hospital district or authority",
+      "voluntaxy non-pxofit - pxivate",
+      "voluxtary xox-profit - private"
+    ],
+    "statistics": {}
+  },
+  "EmergencyService": {
+    "dataType": "string",
+    "isCategorical": true,
+    "distinctionPercentage": 0.006,
+    "missingPercentage": 0.0,
+    "inDeps": [],
+    "similarities": [
+      [
+        "CountyName",
+        0.1203443242382106
+      ],
+      [
+        "MeasureName",
+        0.019184900508070753
+      ],
+      [
+        "Address",
+        0.007263480062553411
+      ],
+      [
+        "MeasureCode",
+        0.004554644476831548
+      ],
+      [
+        "Sample",
+        0.003934867938230724
+      ]
+    ],
+    "correlations": [
+      [
+        "ZipCode",
+        0.5123445027467164
+      ],
+      [
+        "PhoneNumber",
+        0.5014541825884743
+      ],
+      [
+        "HospitalName",
+        0.5006951175133222
+      ],
+      [
+        "Address",
+        0.49826430361560503
+      ],
+      [
+        "ProviderNumber",
+        0.48269973039941794
+      ],
+      [
+        "City",
+        0.4750441148059002
+      ],
+      [
+        "CountyName",
+        0.4740112188139256
+      ],
+      [
+        "HospitalOwner",
+        0.2683963974706325
+      ],
+      [
+        "Stateavg",
+        0.25983503443853945
+      ],
+      [
+        "Score",
+        0.25602070097305046
+      ]
+    ],
+    "samples": [
+      "yes",
+      "yxs",
+      "yex",
+      "no",
+      "xes",
+      "xo"
+    ],
+    "statistics": {}
+  },
+  "Condition": {
+    "dataType": "string",
+    "isCategorical": true,
+    "distinctionPercentage": 0.028,
+    "missingPercentage": 0.0,
+    "inDeps": [],
+    "similarities": [
+      [
+        "MeasureName",
+        0.2760302424341315
+      ],
+      [
+        "MeasureCode",
+        0.24404556260886173
+      ],
+      [
+        "PhoneNumber",
+        0.15077309626798144
+      ],
+      [
+        "CountyName",
+        0.10864845673039736
+      ],
+      [
+        "Address",
+        0.0820851331219216
+      ]
+    ],
+    "correlations": [
+      [
+        "Stateavg",
+        0.45162817924885934
+      ],
+      [
+        "MeasureName",
+        0.43096330208505346
+      ],
+      [
+        "MeasureCode",
+        0.4088791523266224
+      ],
+      [
+        "Score",
+        0.34650629474128747
+      ],
+      [
+        "ProviderNumber",
+        0.29235100734328684
+      ],
+      [
+        "ZipCode",
+        0.2801007175075646
+      ],
+      [
+        "CountyName",
+        0.275235447223458
+      ],
+      [
+        "PhoneNumber",
+        0.2221374680786849
+      ],
+      [
+        "HospitalType",
+        0.22071879876337078
+      ],
+      [
+        "HospitalName",
+        0.21701066390032622
+      ]
+    ],
+    "samples": [
+      "surgical infection prevention",
+      "heart attack",
+      "heart failure",
+      "heart attaxk",
+      "hearx axxack",
+      "pneumonia",
+      "heaxt failuxe",
+      "heaxt attack",
+      "hexrt attxck",
+      "heart faxlure",
+      "suxgical infection pxevention",
+      "surgxcal infectxon preventxon",
+      "xneumonia",
+      "xeart failure",
+      "children s asthma care",
+      "pnxumonia",
+      "pnexmonia",
+      "hxart failurx",
+      "pneumonix",
+      "pxeumoxia",
+      "heart faixure",
+      "surgical ixfectiox prevextiox",
+      "pneumonxa",
+      "hexrt fxilure",
+      "surgical infection xrevention",
+      "heartxattack",
+      "surgical infxction prxvxntion",
+      "surgical xnfection prevention"
+    ],
+    "statistics": {}
+  },
+  "MeasureCode": {
+    "dataType": "string",
+    "isCategorical": true,
+    "distinctionPercentage": 0.054,
+    "missingPercentage": 0.0,
+    "inDeps": [],
+    "similarities": [
+      [
+        "State",
+        0.3699372394318277
+      ],
+      [
+        "Condition",
+        0.24404556260886173
+      ],
+      [
+        "MeasureName",
+        0.19320629381698284
+      ],
+      [
+        "Stateavg",
+        0.10876202733338733
+      ],
+      [
+        "Address",
+        0.09872345458459231
+      ]
+    ],
+    "correlations": [
+      [
+        "Stateavg",
+        0.7273168634145653
+      ],
+      [
+        "MeasureName",
+        0.7173882187199505
+      ],
+      [
+        "Condition",
+        0.40887915232662236
+      ],
+      [
+        "Score",
+        0.3292554302773673
+      ],
+      [
+        "Address",
+        0.24949400644889058
+      ],
+      [
+        "PhoneNumber",
+        0.24562406628667108
+      ],
+      [
+        "ProviderNumber",
+        0.24376226573600657
+      ],
+      [
+        "HospitalName",
+        0.21463086999056297
+      ],
+      [
+        "City",
+        0.2112898407790518
+      ],
+      [
+        "CountyName",
+        0.20208632748242383
+      ]
+    ],
+    "samples": [
+      "scip-card-2",
+      "scip-inf-1",
+      "scip-inf-2",
+      "scip-inf-3",
+      "scip-inf-4",
+      "scip-inf-6",
+      "scip-vte-1",
+      "scip-vte-2",
+      "ami-1",
+      "ami-2",
+      "ami-3",
+      "ami-4",
+      "ami-5",
+      "ami-7a",
+      "ami-8a",
+      "hf-1",
+      "hf-2",
+      "hf-3",
+      "hf-4",
+      "pn-2",
+      "pn-3b",
+      "pn-4",
+      "pn-5c",
+      "pn-6",
+      "pn-7",
+      "axi-4",
+      "hfx1",
+      "pnx5c",
+      "axi-2",
+      "hf-x",
+      "scip-inx-4",
+      "scxp-xnf-3",
+      "cac-2",
+      "cac-3",
+      "amix2",
+      "pn-xb",
+      "hx-1",
+      "scipxinfx1",
+      "sxip-vte-1",
+      "ami-x",
+      "px-5c",
+      "scip-vtx-1",
+      "xf-1",
+      "hfx4",
+      "amix1",
+      "amx-4",
+      "amx-3",
+      "px-4",
+      "scix-inf-2",
+      "hx-2",
+      "cac-1",
+      "xax-1",
+      "pn-x",
+      "pnx6"
+    ],
+    "statistics": {}
+  },
+  "MeasureName": {
+    "dataType": "string",
+    "isCategorical": true,
+    "distinctionPercentage": 0.064,
+    "missingPercentage": 0.0,
+    "inDeps": [],
+    "similarities": [
+      [
+        "Sample",
+        0.5536417277363708
+      ],
+      [
+        "City",
+        0.2785688915356718
+      ],
+      [
+        "Condition",
+        0.2760302424341315
+      ],
+      [
+        "ProviderNumber",
+        0.2239498206557156
+      ],
+      [
+        "MeasureCode",
+        0.19320629381698284
+      ]
+    ],
+    "correlations": [
+      [
+        "MeasureCode",
+        0.7173882187199505
+      ],
+      [
+        "Stateavg",
+        0.6790746306050359
+      ],
+      [
+        "Condition",
+        0.43096330208505346
+      ],
+      [
+        "HospitalType",
+        0.38176303878306134
+      ],
+      [
+        "Score",
+        0.31828832683874075
+      ],
+      [
+        "State",
+        0.28872955117990984
+      ],
+      [
+        "CountyName",
+        0.27934907535461134
+      ],
+      [
+        "Address",
+        0.267506748825272
+      ],
+      [
+        "HospitalOwner",
+        0.2634191409151449
+      ],
+      [
+        "PhoneNumber",
+        0.25310276411753513
+      ]
+    ],
+    "samples": [
+      "surgery patients who were taking heart drugs caxxed beta bxockers before coming to the hospitax who were kept on the beta bxockers during the period just before and after their surgery",
+      "surgery patients who were given an antibiotic at the right time (within one hour before surgery) to help prevent infection",
+      "surgery patients who were given the  right kind  of antibiotic to help prevent infection",
+      "surgery patients whose preventive antibiotics were stopped at the right time (within 24 hours after surgery)",
+      "all heart surgery patients whose blood sugar (blood glucose) is kept under good control in the days right after surgery",
+      "surgery patients needing hair removed from the surgical area before surgery who had hair removed using a safer method (electric clippers or hair removal cream c not a razor)",
+      "surgery patients whose doctors ordered treatments to prevent blood clots after certain types of surgeries",
+      "patients who got treatment  at the right time (within 24 hours before or after their surgery) to help prevent blood clots after certain types of surgery",
+      "heart attack patients given aspirin at arrival",
+      "heart attack patients given aspirin at discharge",
+      "heart attack patients given ace inhibitor or arb for left ventricular systolic dysfunction (lvsd)",
+      "heart attack patients given smoking cessation advice/counseling",
+      "heart attack patients given beta blocker at discharge",
+      "heart attack patients given fibrinolytic medication within 30 minutes of arrival",
+      "heart attack patients given pci within 90 minutes of arrival",
+      "heart failure patients given discharge instructions",
+      "heart failure patients given an evaluation of left ventricular systolic (lvs) function",
+      "heart failure patients given ace inhibitor or arb for left ventricular systolic dysfunction (lvsd)",
+      "heart failure patients given smoking cessation advice/counseling",
+      "pneumonia patients assessed and given pneumococcal vaccination",
+      "pneumonia patients whose initial emergency room blood culture was performed prior to the administration of the first hospital dose of antibiotics",
+      "pneumonia patients given smoking cessation advice/counseling",
+      "pneumonia patients given initial antibiotic(s) within 6 hours after arrival",
+      "pneumonia patients given the most appropriate initial antibiotic(s)",
+      "pneumonia patients assessed and given influenza vaccination",
+      "surgery patients who were taking heart drugs called beta blockers before coming to the hospital who were kept on the beta blockers during the period just before and after their surgery",
+      "xeart attack patients given aspirin at arrival",
+      "surgery patiexts who were takixg heart drugs called beta blockers before comixg to the hospital who were kept ox the beta blockers durixg the period just before axd after their surgery",
+      "heart attack patients given aspirin at arrivax",
+      "heart attaxk patients given aspirin at disxharge",
+      "pneumoniaxpatientsxassessedxandxgivenxinfluenzaxvaccination",
+      "heartxattackxpatientsxgivenxaspirinxatxarrival",
+      "pneumonxa patxents whose inxtxal emergency room blood culture was performed prxor to the admxnxstratxon of the fxrst hospxtal dose of antxbxotxcs",
+      "pnxumonia patixnts whosx initial emxrgxncy room blood culturx was pxrformxd prior to thx administration of thx first hospital dosx of antibiotics",
+      "all heart surgerx patients whose blood sugar (blood glucose) is kept under good control in the daxs right after surgerx",
+      "children who received systemic corticosteroid medication (oral and iv medication that reduces inflammation and controls symptoms) while hospitalized for asthma",
+      "children and their caregivers who received a home management plan of care document while hospitalized for asthma",
+      "surgery pxtients whose doctors ordered trextments to prevent blood clots xfter certxin types of surgeries",
+      "heaxt attack patients given aspixin at dischaxge",
+      "heart xailure patients given smoking cessation advice/counseling",
+      "heart faxlure patxents gxven ace inhxbxtor or arb for left ventrxcular systolxc dysfunctxon (lvsd)",
+      "surgeryxpatientsxneedingxhairxremovedxfromxthexsurgicalxareaxbeforexsurgery& xwhoxhadxhairxremovedxusingxaxsaferxmethodx(electricxclippersxorxhairxremovalxcreamxï¿½cxnotxaxrazor)",
+      "heaxt failuxe patients given dischaxge instxuctions",
+      "hxart attack patixnts givxn ace inhibitor or arb for lxft vxntricular systolic dysfunction (lvsd)",
+      "pneumonix pxtients assessed xnd given influenzx vxccinxtion",
+      "pxeumoxia patiexts assessed axd givex ixfluexza vaccixatiox",
+      "hexrt attxck pxtients given aspirin xt arrivxl",
+      "heaxt attack patients given beta blockex at dischaxge",
+      "allxheartxsurgeryxpatientsxwhosexbloodxsugarx(bloodxglucose)xisxkeptxunderxgoodxcontrolxinxthexdaysxrightxafterxsurgery",
+      "all heaxt suxgexy patients whose blood sugax (blood glucose) is kept undex good contxol in the days xight aftex suxgexy",
+      "heart failure patients given ace inhibitor or arb for left xentricular systolic dysfunction (lxsd)",
+      "heart faxlure patxents gxven smokxng cessatxon advxce/counselxng",
+      "heartxattackxpatientsxgivenxpcixwithinx90xminutesxofxarrival",
+      "pxeumoxia patiexts givex ixitial axtibiotic(s) withix 6 hours after arrival",
+      "pxeumoxia patiexts givex the most appropriate ixitial axtibiotic(s)",
+      "surgery paxienxs needing hair removed from xhe surgical area before surgery who had hair removed using a safer mexhod (elecxric clippers or hair removal cream c nox a razor)",
+      "children who received reliever medication while hospitalized for asthma",
+      "heaxt failuxe patients given an evaluation of left ventxiculax systolic (lvs) function",
+      "heart attack patxents gxven aspxrxn at arrxval",
+      "pneumonix pxtients given initixl antibiotic(s) within 6 hours after arrivxl",
+      "pneumonia patients assessed and given influenza vaxxination",
+      "childrenxwhoxreceivedxrelieverxmedicationxwhilexhospitalizedxforxasthma",
+      "hearx failure paxienxs given smoking cessaxion advice/counseling",
+      "surgery pxtients who were txking hexrt drugs cxlled betx blockers before coming to the hospitxl who were kept on the betx blockers during the period just before xnd xfter their surgery"
+    ],
+    "statistics": {}
+  },
+  "Score": {
+    "dataType": "string",
+    "isCategorical": true,
+    "distinctionPercentage": 0.069,
+    "missingPercentage": 0.0,
+    "inDeps": [],
+    "similarities": [
+      [
+        "MeasureName",
+        0.09320898867938779
+      ],
+      [
+        "ProviderNumber",
+        0.0885124564919096
+      ],
+      [
+        "Sample",
+        0.08476756215381255
+      ],
+      [
+        "PhoneNumber",
+        0.07251031882941437
+      ],
+      [
+        "CountyName",
+        0.06501526599616907
+      ]
+    ],
+    "correlations": [
+      [
+        "Condition",
+        0.34650629474128747
+      ],
+      [
+        "MeasureCode",
+        0.3292554302773673
+      ],
+      [
+        "MeasureName",
+        0.31828832683874075
+      ],
+      [
+        "CountyName",
+        0.2954948146153555
+      ],
+      [
+        "HospitalOwner",
+        0.2828572597899764
+      ],
+      [
+        "HospitalName",
+        0.2808459487251024
+      ],
+      [
+        "Address",
+        0.2790228870095821
+      ],
+      [
+        "ProviderNumber",
+        0.2715193113010549
+      ],
+      [
+        "PhoneNumber",
+        0.2691591440905028
+      ],
+      [
+        "ZipCode",
+        0.25617983461036137
+      ]
+    ],
+    "samples": [
+      "empty",
+      "97%",
+      "92%",
+      "75%",
+      "100%",
+      "86%",
+      "80%",
+      "99%",
+      "98%",
+      "96%",
+      "72%",
+      "78%",
+      "91%",
+      "93%",
+      "89%",
+      "84%",
+      "94%",
+      "88%",
+      "90%",
+      "83%",
+      "60%",
+      "81%",
+      "36%",
+      "95%",
+      "74%",
+      "79%",
+      "82%",
+      "50%",
+      "87%",
+      "64%",
+      "0%",
+      "x00%",
+      "4%",
+      "25%",
+      "33%",
+      "62%",
+      "47%",
+      "9x%",
+      "67%",
+      "x7%",
+      "95x",
+      "85%",
+      "x5%",
+      "40%",
+      "xx%",
+      "89x",
+      "x6%",
+      "71%",
+      "x4%",
+      "1xx%",
+      "77%",
+      "66%",
+      "68%",
+      "93x",
+      "45%",
+      "54%",
+      "32%",
+      "38%",
+      "12%",
+      "46%",
+      "69%",
+      "76%",
+      "x3%",
+      "14%",
+      "80x",
+      "53%",
+      "63%",
+      "65%",
+      "43%"
+    ],
+    "statistics": {}
+  },
+  "Sample": {
+    "dataType": "string",
+    "isCategorical": false,
+    "distinctionPercentage": 0.334,
+    "missingPercentage": 0.0,
+    "inDeps": [],
+    "similarities": [
+      [
+        "MeasureName",
+        0.5536417277363708
+      ],
+      [
+        "ProviderNumber",
+        0.19015969963452417
+      ],
+      [
+        "City",
+        0.16435090520910228
+      ],
+      [
+        "Score",
+        0.08476756215381255
+      ],
+      [
+        "Address",
+        0.06420686096417798
+      ]
+    ],
+    "correlations": [
+      [
+        "ProviderNumber",
+        0.0
+      ],
+      [
+        "HospitalName",
+        0.0
+      ],
+      [
+        "Address",
+        0.0
+      ],
+      [
+        "City",
+        0.0
+      ],
+      [
+        "State",
+        0.0
+      ],
+      [
+        "ZipCode",
+        0.0
+      ],
+      [
+        "CountyName",
+        0.0
+      ],
+      [
+        "PhoneNumber",
+        0.0
+      ],
+      [
+        "HospitalType",
+        0.0
+      ],
+      [
+        "HospitalOwner",
+        0.0
+      ]
+    ],
+    "samples": [
+      "0 patients",
+      "0 patients",
+      "298 patients",
+      "empty",
+      "10 patients",
+      "378 patients",
+      "101 patients",
+      "6 patients",
+      "38 patients",
+      "1 patients",
+      "69 patients",
+      "217 patients",
+      "962 patients",
+      "397 patients",
+      "59 patients",
+      "7 patients",
+      "235 patients",
+      "0 patients",
+      "136 patients",
+      "15 patients",
+      "518 patients",
+      "0 patients",
+      "19 patients",
+      "99 patients",
+      "89 patients",
+      "56 patients",
+      "59 patients",
+      "0 patients",
+      "4 patients",
+      "empty",
+      "497 patients",
+      "2 patients",
+      "0 patients",
+      "48 patients",
+      "45 patients",
+      "288 patients",
+      "140 patients",
+      "117 patients",
+      "3 patients",
+      "175 patients",
+      "99 patients",
+      "0 patients",
+      "9 patients",
+      "399 patients",
+      "empty",
+      "246 patients",
+      "404 patients",
+      "0 patients",
+      "39 patients",
+      "4 patients",
+      "13 patients",
+      "1 patients",
+      "empty",
+      "43 patients",
+      "441 patients",
+      "191 patients",
+      "290 patients",
+      "4 patients",
+      "11 patients",
+      "557 patients",
+      "empty",
+      "34 patients",
+      "165 patients",
+      "112 patients",
+      "12 patients",
+      "4 patients",
+      "empty",
+      "121 patiexts",
+      "247 patients",
+      "24 patients",
+      "28 patients",
+      "0 patients",
+      "84 patients",
+      "8 patients",
+      "226 patients",
+      "331 patients",
+      "28 patients",
+      "385 patients",
+      "85 patients",
+      "empty",
+      "169 patients",
+      "237 patients",
+      "36 patients",
+      "76 patients",
+      "1 patients",
+      "430 patients",
+      "28 patients",
+      "24 patients",
+      "55 patients",
+      "145 patients",
+      "58 patients",
+      "empty",
+      "27 patients",
+      "224 patients",
+      "51 patients",
+      "37 patients",
+      "66 patients",
+      "462 patients",
+      "167 patients",
+      "315 patients"
+    ],
+    "statistics": {}
+  },
+  "Stateavg": {
+    "dataType": "string",
+    "isCategorical": true,
+    "distinctionPercentage": 0.074,
+    "missingPercentage": 0.0,
+    "inDeps": [],
+    "similarities": [
+      [
+        "Address",
+        0.19295274775462248
+      ],
+      [
+        "HospitalName",
+        0.15351229028647906
+      ],
+      [
+        "ProviderNumber",
+        0.1315732053023703
+      ],
+      [
+        "MeasureCode",
+        0.10876202733338733
+      ],
+      [
+        "ZipCode",
+        0.103063323941279
+      ]
+    ],
+    "correlations": [
+      [
+        "MeasureCode",
+        0.7273168634145653
+      ],
+      [
+        "MeasureName",
+        0.6790746306050359
+      ],
+      [
+        "State",
+        0.6232307438775987
+      ],
+      [
+        "Condition",
+        0.45162817924885934
+      ],
+      [
+        "ProviderNumber",
+        0.29972589683720036
+      ],
+      [
+        "City",
+        0.295712024018251
+      ],
+      [
+        "Address",
+        0.28781388147756015
+      ],
+      [
+        "HospitalName",
+        0.278220972528807
+      ],
+      [
+        "EmergencyService",
+        0.25983503443853945
+      ],
+      [
+        "CountyName",
+        0.2537083574849287
+      ]
+    ],
+    "samples": [
+      "al_scip-card-2",
+      "al_scip-inf-1",
+      "al_scip-inf-2",
+      "al_scip-inf-3",
+      "al_scip-inf-4",
+      "al_scip-inf-6",
+      "al_scip-vte-1",
+      "al_scip-vte-2",
+      "al_ami-1",
+      "al_ami-2",
+      "al_ami-3",
+      "al_ami-4",
+      "al_ami-5",
+      "al_ami-7a",
+      "al_ami-8a",
+      "al_hf-1",
+      "al_hf-2",
+      "al_hf-3",
+      "al_hf-4",
+      "al_pn-2",
+      "al_pn-3b",
+      "al_pn-4",
+      "al_pn-5c",
+      "al_pn-6",
+      "al_pn-7",
+      "al_pn-xb",
+      "al_amx-1",
+      "al_scix-vte-2",
+      "al_sxip-inf-2",
+      "ax_ami-1",
+      "xl_xmi-5",
+      "al_axi-1",
+      "al_cac-2",
+      "al_cac-3",
+      "al_pnx2",
+      "al_scipxvtex2",
+      "alxpn-7",
+      "al_hx-2",
+      "ak_hf-1",
+      "ak_hf-2",
+      "ak_hf-3",
+      "ak_hf-4",
+      "ak_pn-2",
+      "ak_pn-3b",
+      "ak_pn-4",
+      "ak_pn-5c",
+      "ak_pn-6",
+      "ak_pn-7",
+      "ak_scip-card-2",
+      "ak_scip-inf-1",
+      "ak_scip-inf-2",
+      "ak_scip-inf-3",
+      "ak_scip-inf-4",
+      "ak_scip-inf-6",
+      "ak_scip-vte-1",
+      "ak_scip-vte-2",
+      "ak_ami-1",
+      "ak_ami-2",
+      "ax_pn-2",
+      "al_pn-5x",
+      "al_scipxvtex1",
+      "xl_xmi-2",
+      "al_amix8a",
+      "alxami-7a",
+      "alxpn-3b",
+      "al_amx-7a",
+      "al_scipxinfx2",
+      "al_scix-vte-1",
+      "al_cac-1",
+      "al_hf-x",
+      "xl_scip-inf-2",
+      "xl_xmi-1",
+      "al_pnx6",
+      "alxpn-6"
+    ],
+    "statistics": {}
+  }
+}

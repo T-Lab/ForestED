@@ -1,0 +1,82 @@
+[
+  {
+    "node_id": "root_provider_format",
+    "kind": "rule",
+    "name": "check_providernumber_format",
+    "code": "def rule_fn(row, col):\n    if col != 'ProviderNumber':\n        return False\n    v = str(row.get('ProviderNumber', '')).strip()\n    return not (v.isdigit() and len(v) == 5)",
+    "params": null,
+    "true_child": "leaf_error",
+    "false_child": "gnn_cfd_condition_measurecode",
+    "leaf_value": null
+  },
+  {
+    "node_id": "gnn_cfd_condition_measurecode",
+    "kind": "gnn",
+    "name": "gnn_cfd_condition_to_measurecode",
+    "code": null,
+    "params": null,
+    "true_child": "check_stateavg_matches_state",
+    "false_child": "check_stateavg_matches_state",
+    "leaf_value": null
+  },
+  {
+    "node_id": "check_stateavg_matches_state",
+    "kind": "rule",
+    "name": "check_stateavg_matches_state",
+    "code": "def rule_fn(row, col):\n    if col != 'Stateavg':\n        return False\n    s = str(row.get('Stateavg', '')).strip()\n    st = str(row.get('State', '')).strip().lower()\n    if '_' not in s or not st:\n        return True\n    prefix = s.split('_', 1)[0].lower()\n    return prefix != st",
+    "params": null,
+    "true_child": "leaf_error",
+    "false_child": "check_measurecode_domain",
+    "leaf_value": null
+  },
+  {
+    "node_id": "check_measurecode_domain",
+    "kind": "rule",
+    "name": "check_measurecode_domain",
+    "code": "def rule_fn(row, col):\n    if col != 'MeasureCode':\n        return False\n    v = str(row.get('MeasureCode', '')).strip().lower()\n    valid = {\n        'scip-card-2',\n        'scip-inf-1','scip-inf-2','scip-inf-3','scip-inf-4','scip-inf-6',\n        'scip-vte-1','scip-vte-2',\n        'ami-1','ami-2','ami-3','ami-4','ami-5','ami-7a','ami-8a',\n        'hf-1','hf-2','hf-3','hf-4',\n        'pn-2','pn-3b','pn-4','pn-5c','pn-6','pn-7'\n    }\n    return v not in valid",
+    "params": null,
+    "true_child": "leaf_error",
+    "false_child": "check_spacing_measurename",
+    "leaf_value": null
+  },
+  {
+    "node_id": "check_spacing_measurename",
+    "kind": "rule",
+    "name": "check_sentence_spacing_measurename",
+    "code": "def rule_fn(row, col):\n    if col != 'MeasureName':\n        return False\n    import re\n    text = str(row.get('MeasureName', ''))\n    if '  ' in text:\n        return True\n    if re.search(r'\\.(\\S)', text):\n        return True\n    return False",
+    "params": null,
+    "true_child": "leaf_error",
+    "false_child": "check_typo_noise_text",
+    "leaf_value": null
+  },
+  {
+    "node_id": "check_typo_noise_text",
+    "kind": "rule",
+    "name": "check_typo_noise_text",
+    "code": "def rule_fn(row, col):\n    text_cols = {'HospitalName','Address','City','CountyName','MeasureName'}\n    if col not in text_cols:\n        return False\n    import re\n    val = str(row.get(col, '')).strip()\n    tokens = re.findall(r'[A-Za-z]+', val)\n    whitelist = {'next','exercise','exercises','example','examples','annex','complex','index','indexes','box','boxes','oxide'}\n    for tok in tokens:\n        tl = tok.lower()\n        if 'x' in tl and tl not in whitelist:\n            return True\n    return False",
+    "params": null,
+    "true_child": "leaf_error",
+    "false_child": "leaf_ok",
+    "leaf_value": null
+  },
+  {
+    "node_id": "leaf_error",
+    "kind": "leaf",
+    "name": "",
+    "code": null,
+    "params": null,
+    "true_child": null,
+    "false_child": null,
+    "leaf_value": true
+  },
+  {
+    "node_id": "leaf_ok",
+    "kind": "leaf",
+    "name": "",
+    "code": null,
+    "params": null,
+    "true_child": null,
+    "false_child": null,
+    "leaf_value": false
+  }
+]

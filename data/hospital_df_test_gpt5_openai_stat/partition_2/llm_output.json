@@ -1,0 +1,2782 @@
+{
+  "nodes": [
+    {
+      "node_id": "root",
+      "kind": "rule",
+      "name": "check_single_spacing",
+      "code": "def rule_fn(row, col):\n    import re\n    val = row.get(col, \"\")\n    if not isinstance(val, str):\n        return False\n    s = val\n    # multiple spaces between words\n    if \"  \" in s:\n        return True\n    # period not followed by a space (except if at end of string)\n    if re.search(r'\\.(?!\\s|$)', s):\n        return True\n    return False",
+      "true_child": "leaf_error",
+      "false_child": "gnn_stateavg_prefix"
+    },
+    {
+      "node_id": "gnn_stateavg_prefix",
+      "kind": "gnn",
+      "name": "gnn_cfd_stateavg_prefix",
+      "true_child": "check_text_noise_x",
+      "false_child": "check_text_noise_x"
+    },
+    {
+      "node_id": "check_text_noise_x",
+      "kind": "rule",
+      "name": "check_text_noise_x",
+      "code": "def rule_fn(row, col):\n    import re\n    val = row.get(col, \"\")\n    if not isinstance(val, str):\n        return False\n    s = val\n    # Flag mojibake and intrusive 'x' noise inside words (letter 'x' between word chars)\n    if '\\u00ef' in s or '\\u00bf' in s or '\\u00bd' in s:\n        return True\n    if re.search(r'(?i)(?<=\\w)x(?=\\w)', s):\n        return True\n    return False",
+      "true_child": "leaf_error",
+      "false_child": "check_sample_format"
+    },
+    {
+      "node_id": "check_sample_format",
+      "kind": "rule",
+      "name": "check_sample_format",
+      "code": "def rule_fn(row, col):\n    import re\n    if col != 'Sample':\n        return False\n    s = str(row.get(col, \"\"))\n    # Strictly: integer + one space + 'patients'\n    return re.match(r'^\\d+ patients$', s) is None",
+      "true_child": "leaf_error",
+      "false_child": "check_score_percent_range"
+    },
+    {
+      "node_id": "check_score_percent_range",
+      "kind": "rule",
+      "name": "check_score_percent_range",
+      "code": "def rule_fn(row, col):\n    import re\n    if col != 'Score':\n        return False\n    s = str(row.get(col, \"\"))\n    m = re.match(r'^(\\d{1,3})%$', s)\n    if not m:\n        return True\n    try:\n        v = int(m.group(1))\n    except:\n        return True\n    return v < 0 or v > 100",
+      "true_child": "leaf_error",
+      "false_child": "check_measurecode_stateavg_match"
+    },
+    {
+      "node_id": "check_measurecode_stateavg_match",
+      "kind": "rule",
+      "name": "check_measurecode_stateavg_match",
+      "code": "def rule_fn(row, col):\n    # Cross-column consistency: Stateavg must be '<state>_<MeasureCode>' and state prefix must match State\n    state = str(row.get('State', '')).lower()\n    stateavg = str(row.get('Stateavg', ''))\n    code = str(row.get('MeasureCode', ''))\n    if col not in {'Stateavg', 'MeasureCode'}:\n        return False\n    if not state or not stateavg or not code or '_' not in stateavg:\n        return True\n    expected_prefix = f\"{state}_\"\n    if not stateavg.startswith(expected_prefix):\n        return True\n    suffix = stateavg.split('_', 1)[1]\n    return suffix != code",
+      "true_child": "leaf_error",
+      "false_child": "check_zip_5digit"
+    },
+    {
+      "node_id": "check_zip_5digit",
+      "kind": "rule",
+      "name": "check_zip_5digit",
+      "code": "def rule_fn(row, col):\n    import re\n    if col != 'ZipCode':\n        return False\n    s = str(row.get(col, ''))\n    return re.match(r'^\\d{5}$', s) is None",
+      "true_child": "leaf_error",
+      "false_child": "check_domain_membership"
+    },
+    {
+      "node_id": "check_domain_membership",
+      "kind": "rule",
+      "name": "check_domain_membership",
+      "code": "def rule_fn(row, col):\n    DOMAINS = {\n      'ProviderNumber': {'10018','10019','1xx19','10001','10005','x0005','10006','1000x','10007','10008','10009','10010','10011','x00xx','10012','x00x5','10015','1xx15','10016','1xx16','10038','100x8','10055','10056','10085','10086','100x6','10087','10108','x0x08','10158','10164','20017','20018','10021','10022','10023','10024','1xx24','10025','10027','x0027','10029','x0029','1xx29','10032','1xx32','10033','10034','100x4','10035','100x5','1xx35','10036','1xx36','10039','1003x','1xx39','100x9','10040','10043','10044','1xx44','10045','1xx45','x0045','10046','10047','1xx47','1004x','10049','10050'},\n      'HospitalName': {'callahan eye foundation hospital','helen keller memorial hospital','southeast alabama medical center','southeast alabama medxcal center','marshall medical center south','eliza coffee memorial hospital','mizell memorial hospital','crenshaw community hospital','crenshaw cxmmunity hxspital','hartselle medical center','marshall medical center north','marshall medical cenxer norxh','st vincents east','dekalb regional medical center','dexalb regional medical center','southwest alabama medical center','shelby baptist medical center','stringfellow memorial hospital','flowers hospital','floxers hospital','st vincents hospital','decatur general hospital','northwest medical center','univ of south alabama medical center','univ ox south alabama medical center','xniv of soxth alabama medical center','prattville baptist hospital','russellville hospital','coosa valley medical center','alaska regional hospital','xlxskx regionxl hospitxl','yukon kuskokwim delta reg hospital','dale medical center','cherokee medical center','baptist medical center south','baptist medical cexter south','jackson hospital & clinic inc','jaxkson hospital & xlinix inx','g h lanier memorial hospital','elba general hospital','east alabama medical center and snf','wedowee hospital','wedowee hosxital','university of alabama hospital','community hospital inc','communitx hospital inc','communixy hospixal inc','cullman regional medical center','cullmxn regionxl medicxl center','andalusia regional hospital','andaxusia regionax hospitax','andaluxia regional hoxpital','huntsville hospital','huntsvxlle hospxtal','gadsden regional medical center','chilton medical center','marion regional medical center','fayette medical center','riverview regional medical center','rivxrvixw rxgional mxdical cxntxr','xivexview xegional medical centex','riverview rexional medical center','georgiana hospital','georgiaxa hospital','medical center enterprise','medixal xenter enterprise','medxcal center enterprxse','st vincents blount','st vincents bxount'},\n      'Address': {'1720 university blvd','1300 south montgomery avenue','1108 ross clark circle','2505 u s highway 431 north','2505xuxsxhighwayx431xnorth','205 marengo street','702xnxmainxst','702 n main st','702 x maix st','101 hospital circle','201 pine street northwest','201 pine sxreex norxhwesx','8000 alabama highway 69','8000 alabama xigxway 69','50 medical park east drive','200 med center drive','33700 highway 43','33700 hxghway 43','33700 highway x3','1000 first street north','1000 fixst stxeet noxth','1720 univxrsity blvd','301 east 18th st','301xeastx18thxst','4370 west main street','4370xwestxmainxstreet','810 st vincents drive','810 st vxncents drxve','1201 7th street se','1530 u s highway 43','1530xuxsxhighwayx43','2451 fillingim street','124 s memorial dr','124xsxmemorialxdr','124 s mxmorial dr','15155 highway 43','315 w hickory st','315 w hickxry st','315xwxhickoryxst','2801 debarr road','po box 287','poxboxx287','126 hospital ave','126xhospitalxave','1x6 hospital ave','400 northwood dr','2105 east south boulevard','1725 pine street','4800 48th st','987 drayton street','2000 pepperell parkway','209 north main street','209 xorth maix street','619 south 19th street','805 friendship road','1912 alabama highway 157','1912xalabamaxhighwayx157','849 south three notch street','301 east 1xth st','101 sivley rd','1007 goodyear avenue','1010 lay dam road','x0x0 lay dam road','1256 military street south','1256 military street sxuth','1653 temple avenue north','600 south third street','600 souxh xhird sxreex','515 miranda st','515 miranda sx','515 miranxa st','515 mirxndx st','400 n edwards street','400xnxedwardsxstreet','150 gilbreath drive','150 gilxreath drive'},\n      'City': {'birmingham','birminghxm','birmingxam','sheffield','sheffxeld','dothan','boaz','boxz','florence','fxorence','florxncx','flxrence','opp','luverne','hartselle','guntersville','guntxrsvillx','birmixgham','bxrmxngham','fort payne','fort payxe','thomasville','alabaster','axxistox','anniston','decatur','winfield','winfielx','mobile','prattville','russellville','sylacauga','anchorage','anchoraxe','bethel','ozark','ozarx','xzark','centre','montgomery','montxomery','valley','vallex','vxlley','elba','exba','opelika','wedowee','wxdowxx','birminxham','tallassee','tallaxxee','cullman','cuxxman','andalusia','andaluxia','annxston','huntsville','gadsden','gxdsden','clanton','hamilton','hamilxon','fayette','faxette','georgiana','geoxgiana','enterprise','enterprxse','xntxrprisx','oneonta','onxonta'},\n      'State': {'al','xl','ax','ak'},\n      'ZipCode': {'35233','35660','36302','x5957','35957','3595x','35631','3563x','36467','36049','36x49','360x9','35640','3x640','35976','35235','3x23x','35968','359x8','36784','x6784','35007','3x007','x5007','36201','36x01','36305','3x305','x6x05','35205','35609','35594','3xx94','36617','36067','3x0x7','35653','35150','x5150','3x1x0','99508','99559','36360','x6x60','35960','x5960','36116','36106','3x10x','36854','36323','36801','36278','3x233','x52xx','36078','36x78','35058','36420','3642x','35801','35903','x590x','35045','35570','35555','35901','3590x','36033','36330','35121'},\n      'CountyName': {'jefferson','houston','marshall','mxrshxll','lauderdale','laudxrdalx','laudexdale','covington','crenshaw','crxnshaw','morgan','jeffersxn','de kalb','dx kalb','xe kalb','clarke','xlarke','shelby','calhoun','calhoxn','caxhoun','housxon','marion','mobile','autauga','franklin','talladega','tallaxega','anchorage','bethel','jxffxrson','xefferson','jexxerson','dale','cherokee','chxrokxx','montgomery','monxgomery','montgomexy','chambers','xhambers','chaxbers','coffee','coffxx','lee','xee','randolph','elmore','elmoxe','elxore','cullman','cxllman','coxington','madison','madisxn','madisox','etowah','chilton','fayette','fayexxe','etowxh','butler','butxer','cxffee','blount'},\n      'PhoneNumber': {'2053258100','2563864556','3347938701','334793870x','xx479x8701','2565938310','2x6x938310','2565x38310','2567688400','3344933541','3344x33541','3343353374','2567736511','2565718000','2058383122','2058x8x122','2568453150','2568453x50','3346366221','xx46x66221','334x3xx221','2056208100','2562358900','256235x900','3347935000','xx479x5000','2059397000','2563412000','2054877736','2514717110','25x47x7xx0','3343614267','33x361x267','2563321611','2562495000','9072761131','9075436300','3347742601','334774x601','2569275531','3342xx2100','3342882100','3342938000','3342938xxx','33x2938000','3347561400','334x561400','3348972257','33x8972257','3347493411','2563572111','20593xx011','2059344011','3342836541','334x836541','33x28365x1','2567372000','3342228466','334xxx8466','33422284xx','2562651000','2564944000','2564944xxx','2057552500','2059216200','x059x16x00','20x9216200','2059325966','x0593x5966','2565435200','x565435x00','3343762205','3343470584','2052743000'},\n      'HospitalType': {'acute care hospitals','acuxe care hospixals','acxte care hospitals','acute care hosxitals','acutx carx hospitals','acutexcarexhospitals','acute care hospitaxs','acute caxe hospitals','acute care hxspitals','acute cxre hospitxls','axute care hospitals','acute care hoxpitalx','acute xare hospitals'},\n      'HospitalOwner': {'voluntary non-profit - private','government - hospital district or authority','government - hospxtal dxstrxct or authorxty','government - hospital xistrict or authority','governmenx - hospixal disxricx or auxhorixy','gxvernment - hxspital district xr authxrity','voluntary non-profit - other','volunxary non-profix - privaxe','government - federal','proprietary','pxopxietaxy','proxrietary','xroprietary','voluntary nonxprofit x private','voluntary non-profit - church','voluntaryxnon-profitx-xchurch','voxuntary non-profit - church','governxent - federal','prxprietary','government - state','voluntaryxnon-profitx-xprivate','volxntary non-profit - chxrch','voluntary non-profit - otxer','government - local','goverxmext - hospital district or authority','voluntaxy non-pxofit - pxivate','voluxtary xox-profit - private'},\n      'EmergencyService': {'yes','yxs','yex','no','xes','xo'},\n      'Condition': {'surgical infection prevention','heart attack','heart failure','heart attaxk','hearx axxack','pneumonia','heaxt failuxe','heaxt attack','hexrt attxck','heart faxlure','suxgical infection pxevention','surgxcal infectxon preventxon','xneumonia','xeart failure','children s asthma care','pnxumonia','pnexmonia','hxart failurx','pneumonix','pxeumoxia','heart faixure','surgical ixfectiox prevextiox','pneumonxa','hexrt fxilure','surgical infection xrevention','heartxattack','surgical infxction prxvxntion','surgical xnfection prevention'},\n      'MeasureCode': {'scip-card-2','scip-inf-1','scip-inf-2','scip-inf-3','scip-inf-4','scip-inf-6','scip-vte-1','scip-vte-2','ami-1','ami-2','ami-3','ami-4','ami-5','ami-7a','ami-8a','hf-1','hf-2','hf-3','hf-4','pn-2','pn-3b','pn-4','pn-5c','pn-6','pn-7','axi-4','hfx1','pnx5c','axi-2','hf-x','scip-inx-4','scxp-xnf-3','cac-2','cac-3','amix2','pn-xb','hx-1','scipxinfx1','sxip-vte-1','ami-x','px-5c','scip-vtx-1','xf-1','hfx4','amix1','amx-4','amx-3','px-4','scix-inf-2','hx-2','cac-1','xax-1','pn-x','pnx6'},\n      'MeasureName': {'surgery patients who were taking heart drugs caxxed beta bxockers before coming to the hospitax who were kept on the beta bxockers during the period just before and after their surgery','surgery patients who were given an antibiotic at the right time (within one hour before surgery) to help prevent infection','surgery patients who were given the  right kind  of antibiotic to help prevent infection','surgery patients whose preventive antibiotics were stopped at the right time (within 24 hours after surgery)','all heart surgery patients whose blood sugar (blood glucose) is kept under good control in the days right after surgery','surgery patients needing hair removed from the surgical area before surgery who had hair removed using a safer method (electric clippers or hair removal cream c not a razor)','surgery patients whose doctors ordered treatments to prevent blood clots after certain types of surgeries','patients who got treatment  at the right time (within 24 hours before or after their surgery) to help prevent blood clots after certain types of surgery','heart attack patients given aspirin at arrival','heart attack patients given aspirin at discharge','heart attack patients given ace inhibitor or arb for left ventricular systolic dysfunction (lvsd)','heart attack patients given smoking cessation advice/counseling','heart attack patients given beta blocker at discharge','heart attack patients given fibrinolytic medication within 30 minutes of arrival','heart attack patients given pci within 90 minutes of arrival','heart failure patients given discharge instructions','heart failure patients given an evaluation of left ventricular systolic (lvs) function','heart failure patients given ace inhibitor or arb for left ventricular systolic dysfunction (lvsd)','heart failure patients given smoking cessation advice/counseling','pneumonia patients assessed and given pneumococcal vaccination','pneumonia patients whose initial emergency room blood culture was performed prior to the administration of the first hospital dose of antibiotics','pneumonia patients given smoking cessation advice/counseling','pneumonia patients given initial antibiotic(s) within 6 hours after arrival','pneumonia patients given the most appropriate initial antibiotic(s)','pneumonia patients assessed and given influenza vaccination','surgery patients who were taking heart drugs called beta blockers before coming to the hospital who were kept on the beta blockers during the period just before and after their surgery','xeart attack patients given aspirin at arrival','surgery patiexts who were takixg heart drugs called beta blockers before comixg to the hospital who were kept ox the beta blockers durixg the period just before axd after their surgery','heart attack patients given aspirin at arrivax','heart attaxk patients given aspirin at disxharge','pneumoniaxpatientsxassessedxandxgivenxinfluenzaxvaccination','heartxattackxpatientsxgivenxaspirinxatxarrival','pneumonxa patxents whose inxtxal emergency room blood culture was performed prxor to the admxnxstratxon of the fxrst hospxtal dose of antxbxotxcs','pnxumonia patixnts whosx initial emxrgxncy room blood culturx was pxrformxd prior to thx administration of thx first hospital dosx of antibiotics','all heart surgerx patients whose blood sugar (blood glucose) is kept under good control in the daxs right after surgerx','children who received systemic corticosteroid medication (oral and iv medication that reduces inflammation and controls symptoms) while hospitalized for asthma','children and their caregivers who received a home management plan of care document while hospitalized for asthma','surgery pxtients whose doctors ordered trextments to prevent blood clots xfter certxin types of surgeries','heaxt attack patients given aspixin at dischaxge','heart xailure patients given smoking cessation advice/counseling','heart faxlure patxents gxven ace inhxbxtor or arb for left ventrxcular systolxc dysfunctxon (lvsd)','surgeryxpatientsxneedingxhairxremovedxfromxthexsurgicalxareaxbeforexsurgery& xwhoxhadxhairxremovedxusingxaxsaferxmethodx(electricxclippersxorxhairxremovalxcreamxï¿½cxnotxaxrazor)','heaxt failuxe patients given dischaxge instxuctions','hxart attack patixnts givxn ace inhibitor or arb for lxft vxntricular systolic dysfunction (lvsd)','pneumonix pxtients assessed xnd given influenzx vxccinxtion','pxeumoxia patiexts assessed axd givex ixfluexza vaccixatiox','hexrt attxck pxtients given aspirin xt arrivxl','heaxt attack patients given beta blockex at dischaxge','allxheartxsurgeryxpatientsxwhosexbloodxsugarx(bloodxglucose)xisxkeptxunderxgoodxcontrolxinxthexdaysxrightxafterxsurgery','all heaxt suxgexy patients whose blood sugax (blood glucose) is kept undex good contxol in the days xight aftex suxgexy','heart failure patients given ace inhibitor or arb for left xentricular systolic dysfunction (lxsd)','heart faxlure patxents gxven smokxng cessatxon advxce/counselxng','heartxattackxpatientsxgivenxpcixwithinx90xminutesxofxarrival','pxeumoxia patiexts givex ixitial axtibiotic(s) withix 6 hours after arrival','pxeumoxia patiexts givex the most appropriate ixitial axtibiotic(s)','surgery paxienxs needing hair removed from xhe surgical area before surgery who had hair removed using a safer mexhod (elecxric clippers or hair removal cream c nox a razor)','children who received reliever medication while hospitalized for asthma','heaxt failuxe patients given an evaluation of left ventxiculax systolic (lvs) function','heart attack patxents gxven aspxrxn at arrxval','pneumonix pxtients given initixl antibiotic(s) within 6 hours after arrivxl','pneumonia patients assessed and given influenza vaxxination','childrenxwhoxreceivedxrelieverxmedicationxwhilexhospitalizedxforxasthma','hearx failure paxienxs given smoking cessaxion advice/counseling','surgery pxtients who were txking hexrt drugs cxlled betx blockers before coming to the hospitxl who were kept on the betx blockers during the period just before xnd xfter their surgery'},\n      'Score': {'empty','97%','92%','75%','100%','86%','80%','99%','98%','96%','72%','78%','91%','93%','89%','84%','94%','88%','90%','83%','60%','81%','36%','95%','74%','79%','82%','50%','87%','64%','0%','x00%','4%','25%','33%','62%','47%','9x%','67%','x7%','95x','85%','x5%','40%','xx%','89x','x6%','71%','x4%','1xx%','77%','66%','68%','93x','45%','54%','32%','38%','12%','46%','69%','76%','x3%','14%','80x','53%','63%','65%','43%'},\n      'Sample': {'empty','33 patients','13 patients','4 patients','14 patients','0 patients','114 patients','149 patients','3x patients','41 patients','270 patients','516 patients','71 patients','244 patients','441 patients','40 patients','455 patients','514 patients','165 patients','110 patients','191 patients','125 patients','107 patients','196 patients','147 patients','160 patients','79 patients','399 patients','405 patients','385 patients','136 patients','537 patients','185 patients','184 patients','20 patients','5 patients','2 patients','69 patients','34 patients','172 patients','120 patients','98 patients','211 patients','175 patients','118 patients','168 patients','167 patients','158 patients','237 patients','76 patients','159 patients','247 patients','43 patients','103 patients','227 patients','61 patients','217 patients','259 patients','84 patients','53 patients','174 patients','137 patients','65 patients','200 patients','138 patients','85 patients','457 patients','462 patients','439 patients','130 patients','619 paxienxs','242 patients','59 patients','8 patients','64 patients','28 patients','87 patients','57 patients','63 patients','11 patients','101 patients','100 patients','0 patixnts','123 patients','77 patients','1 patients','26 patients','39 patients','16 patients','15 patients','9 patients','21 pxtients','21 patients','6 patients','3 patients','35 patients','42 patients','10 patients','12 patients','44 patients','30 patients','25 patients','51 patients','45 patients','7 patients','xx patients','6xpatients','55 patients','80 patients','27 patients','128 patients','115 patients','133 patients','66 patients','155 patients','56 patients','240 patients','295 patients','70 patients','131 patients','288 patients','48 patients','316 patients','372 patients','135 patients','112 patients','89 patients','461 patients','473 patients','442 patients','127 patients','601 patients','229 patients','224 patients','46 patients','1 patiexts','94 patients','36 patients','91 patients','37 patients','88 patients','82 patientx','139 patients','179 patients','90 patients','17 patients','24 patients','208 patients','169 patients','210 patients','246 patients','235 patients','239 patients','116 patients','199 patients','96 patients','368 patients','370 patients','331 patients','588 patients','226 patients','225 patients','81 patients','73 patients','29 xatients','67 patients','142 patients','157 patients','49 patients','102 patients','83 patients','145 patients','99 patients','23 patients','342 patients','62 patients','166 patients','152 patients','146 patients','950 patients','957 patients','882 patients','1295 patients','497 patients','260 patients','205 patients','1x patients','19 patients','58 patients','86 patients','22 patients','150 patients','75 patients','93 patients','18 patients','125 patixnts','4 xatients','78 patients','105 patients','95 patients','47 patients','29 patients','106 patients','513 patients','521 patiexts','499 patients','690 patients','223 patients','192 patients','119 patients','54 patients','253 patients','255 patients','245 patients','x patients','369 patients','144 patients','32 patients','74 patients','62 patientx','52 patients','50 patients','0 patxents','44 paxienxs','31 patients','134 patients','282 patients','254 patients','25x patients','292 patients','87 patientx','412 patients','423 patients','392 patients','575 patients','111 patients','173 patients','430 patients','518 patients','243 patients','230 patients','74 patxents','233 patients','97 patients','180 patients','844 patients','827 patients','817 patients','1062 patients','263 patients','164 patients','38 patients','50 pxtients','60 patients','117 patients','172 patxents','290 patients','72 patients','122 patients','281 patients','527 patients','570 patients','272 patients','129 patients','153 patients','1001 patients','1016 patients','962 patients','241 patients','1421 patients','87 paxienxs','618 xatients','681 patients','343 patients','378 patients','357 patients','324 patients','350 patients','317 patients','140 patients','585 patients','68 patients','411 patients','417 patients','598 patients','298 patients','121 patients','141 patients','204 patients','195 patients','193 patients','193 paxienxs','323 patients','301 patients','264 patients','303 patients','509 patients','496 patients','294 patients','511 patients','313 patients','409 patients','603 patients','561 patients','852 patients','269 patients','187 patients','266 patients','109 patients','557 patients','564 patients','520 patients','186 patients','854 patients','315 patients','4 patiexts','121 patiexts','15 patiexts','126 patxents','268 patients','261 patients','212 patients','178 patients','402 patients','404 patients','352 patients','607 patients','280 patients','82 patients','27 paxienxs','397 patients','391 patients','485 patients','92 patients'},\n      'Stateavg': {'al_scip-card-2','al_scip-inf-1','al_scip-inf-2','al_scip-inf-3','al_scip-inf-4','al_scip-inf-6','al_scip-vte-1','al_scip-vte-2','al_ami-1','al_ami-2','al_ami-3','al_ami-4','al_ami-5','al_ami-7a','al_ami-8a','al_hf-1','al_hf-2','al_hf-3','al_hf-4','al_pn-2','al_pn-3b','al_pn-4','al_pn-5c','al_pn-6','al_pn-7','al_pn-xb','al_amx-1','al_scix-vte-2','al_sxip-inf-2','ax_ami-1','xl_xmi-5','al_axi-1','al_cac-2','al_cac-3','al_pnx2','al_scipxvtex2','alxpn-7','al_hx-2','ak_hf-1','ak_hf-2','ak_hf-3','ak_hf-4','ak_pn-2','ak_pn-3b','ak_pn-4','ak_pn-5c','ak_pn-6','ak_pn-7','ak_scip-card-2','ak_scip-inf-1','ak_scip-inf-2','ak_scip-inf-3','ak_scip-inf-4','ak_scip-inf-6','ak_scip-vte-1','ak_scip-vte-2','ak_ami-1','ak_ami-2','ax_pn-2','al_pn-5x','al_scipxvtex1','xl_xmi-2','al_amix8a','alxami-7a','alxpn-3b','al_amx-7a','al_scipxinfx2','al_scix-vte-1','al_cac-1','al_hf-x','xl_scip-inf-2','xl_xmi-1','al_pnx6','alxpn-6'}\n    }\n    if col not in DOMAINS:\n      return False\n    val = row.get(col, None)\n    return val not in DOMAINS[col]",
+      "true_child": "leaf_error",
+      "false_child": "leaf_ok"
+    },
+    {
+      "node_id": "leaf_error",
+      "kind": "leaf",
+      "leaf_value": true
+    },
+    {
+      "node_id": "leaf_ok",
+      "kind": "leaf",
+      "leaf_value": false
+    }
+  ],
+  "sample_labels": [
+    {
+      "row_id": 0,
+      "column": "ProviderNumber",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 0,
+      "column": "HospitalName",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 0,
+      "column": "Address",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 0,
+      "column": "City",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 0,
+      "column": "State",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 0,
+      "column": "ZipCode",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 0,
+      "column": "CountyName",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 0,
+      "column": "PhoneNumber",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 0,
+      "column": "HospitalType",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 0,
+      "column": "HospitalOwner",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 0,
+      "column": "EmergencyService",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 0,
+      "column": "Condition",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 0,
+      "column": "MeasureCode",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 0,
+      "column": "MeasureName",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 0,
+      "column": "Score",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 0,
+      "column": "Sample",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 0,
+      "column": "Stateavg",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 1,
+      "column": "ProviderNumber",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 1,
+      "column": "HospitalName",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 1,
+      "column": "Address",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 1,
+      "column": "City",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 1,
+      "column": "State",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 1,
+      "column": "ZipCode",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 1,
+      "column": "CountyName",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 1,
+      "column": "PhoneNumber",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 1,
+      "column": "HospitalType",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 1,
+      "column": "HospitalOwner",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 1,
+      "column": "EmergencyService",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 1,
+      "column": "Condition",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 1,
+      "column": "MeasureCode",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 1,
+      "column": "MeasureName",
+      "is_error": true,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "leaf_error"
+      ]
+    },
+    {
+      "row_id": 1,
+      "column": "Score",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 1,
+      "column": "Sample",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 1,
+      "column": "Stateavg",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 2,
+      "column": "ProviderNumber",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 2,
+      "column": "HospitalName",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 2,
+      "column": "Address",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 2,
+      "column": "City",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 2,
+      "column": "State",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 2,
+      "column": "ZipCode",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 2,
+      "column": "CountyName",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 2,
+      "column": "PhoneNumber",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 2,
+      "column": "HospitalType",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 2,
+      "column": "HospitalOwner",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 2,
+      "column": "EmergencyService",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 2,
+      "column": "Condition",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 2,
+      "column": "MeasureCode",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 2,
+      "column": "MeasureName",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 2,
+      "column": "Score",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 2,
+      "column": "Sample",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 2,
+      "column": "Stateavg",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 3,
+      "column": "ProviderNumber",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 3,
+      "column": "HospitalName",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 3,
+      "column": "Address",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 3,
+      "column": "City",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 3,
+      "column": "State",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 3,
+      "column": "ZipCode",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 3,
+      "column": "CountyName",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 3,
+      "column": "PhoneNumber",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 3,
+      "column": "HospitalType",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 3,
+      "column": "HospitalOwner",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 3,
+      "column": "EmergencyService",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 3,
+      "column": "Condition",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 3,
+      "column": "MeasureCode",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 3,
+      "column": "MeasureName",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 3,
+      "column": "Score",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 3,
+      "column": "Sample",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 3,
+      "column": "Stateavg",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 4,
+      "column": "ProviderNumber",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 4,
+      "column": "HospitalName",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 4,
+      "column": "Address",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 4,
+      "column": "City",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 4,
+      "column": "State",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 4,
+      "column": "ZipCode",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 4,
+      "column": "CountyName",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 4,
+      "column": "PhoneNumber",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 4,
+      "column": "HospitalType",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 4,
+      "column": "HospitalOwner",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 4,
+      "column": "EmergencyService",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 4,
+      "column": "Condition",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 4,
+      "column": "MeasureCode",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 4,
+      "column": "MeasureName",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 4,
+      "column": "Score",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 4,
+      "column": "Sample",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 4,
+      "column": "Stateavg",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 5,
+      "column": "ProviderNumber",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 5,
+      "column": "HospitalName",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 5,
+      "column": "Address",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 5,
+      "column": "City",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 5,
+      "column": "State",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 5,
+      "column": "ZipCode",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 5,
+      "column": "CountyName",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 5,
+      "column": "PhoneNumber",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 5,
+      "column": "HospitalType",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 5,
+      "column": "HospitalOwner",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 5,
+      "column": "EmergencyService",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 5,
+      "column": "Condition",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 5,
+      "column": "MeasureCode",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 5,
+      "column": "MeasureName",
+      "is_error": true,
+      "path": [
+        "root",
+        "leaf_error"
+      ]
+    },
+    {
+      "row_id": 5,
+      "column": "Score",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 5,
+      "column": "Sample",
+      "is_error": true,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "leaf_error"
+      ]
+    },
+    {
+      "row_id": 5,
+      "column": "Stateavg",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 6,
+      "column": "ProviderNumber",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 6,
+      "column": "HospitalName",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 6,
+      "column": "Address",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 6,
+      "column": "City",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 6,
+      "column": "State",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 6,
+      "column": "ZipCode",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 6,
+      "column": "CountyName",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 6,
+      "column": "PhoneNumber",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 6,
+      "column": "HospitalType",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 6,
+      "column": "HospitalOwner",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 6,
+      "column": "EmergencyService",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 6,
+      "column": "Condition",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 6,
+      "column": "MeasureCode",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 6,
+      "column": "MeasureName",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 6,
+      "column": "Score",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 6,
+      "column": "Sample",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 6,
+      "column": "Stateavg",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 7,
+      "column": "ProviderNumber",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 7,
+      "column": "HospitalName",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 7,
+      "column": "Address",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 7,
+      "column": "City",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 7,
+      "column": "State",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 7,
+      "column": "ZipCode",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 7,
+      "column": "CountyName",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 7,
+      "column": "PhoneNumber",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 7,
+      "column": "HospitalType",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 7,
+      "column": "HospitalOwner",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 7,
+      "column": "EmergencyService",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 7,
+      "column": "Condition",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 7,
+      "column": "MeasureCode",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 7,
+      "column": "MeasureName",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 7,
+      "column": "Score",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 7,
+      "column": "Sample",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 7,
+      "column": "Stateavg",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 8,
+      "column": "ProviderNumber",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 8,
+      "column": "HospitalName",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 8,
+      "column": "Address",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 8,
+      "column": "City",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 8,
+      "column": "State",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 8,
+      "column": "ZipCode",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 8,
+      "column": "CountyName",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 8,
+      "column": "PhoneNumber",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 8,
+      "column": "HospitalType",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 8,
+      "column": "HospitalOwner",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 8,
+      "column": "EmergencyService",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 8,
+      "column": "Condition",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 8,
+      "column": "MeasureCode",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 8,
+      "column": "MeasureName",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 8,
+      "column": "Score",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 8,
+      "column": "Sample",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 8,
+      "column": "Stateavg",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 9,
+      "column": "ProviderNumber",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 9,
+      "column": "HospitalName",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 9,
+      "column": "Address",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 9,
+      "column": "City",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 9,
+      "column": "State",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 9,
+      "column": "ZipCode",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 9,
+      "column": "CountyName",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 9,
+      "column": "PhoneNumber",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 9,
+      "column": "HospitalType",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 9,
+      "column": "HospitalOwner",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 9,
+      "column": "EmergencyService",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 9,
+      "column": "Condition",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 9,
+      "column": "MeasureCode",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 9,
+      "column": "MeasureName",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 9,
+      "column": "Score",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 9,
+      "column": "Sample",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    },
+    {
+      "row_id": 9,
+      "column": "Stateavg",
+      "is_error": false,
+      "path": [
+        "root",
+        "gnn_stateavg_prefix",
+        "check_text_noise_x",
+        "check_sample_format",
+        "check_score_percent_range",
+        "check_measurecode_stateavg_match",
+        "check_zip_5digit",
+        "check_domain_membership",
+        "leaf_ok"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,92 @@
+[
+  {
+    "node_id": "root",
+    "kind": "rule",
+    "name": "check_single_spacing",
+    "code": "def rule_fn(row, col):\n    val = row.get(col, \"\")\n    if not isinstance(val, str):\n        return False\n    # Leading or trailing whitespace\n    if val != val.strip():\n        return True\n    # Double spaces anywhere\n    if \"  \" in val:\n        return True\n    # Two or more spaces after a period\n    import re\n    if re.search(r\"\\. {2,}\", val):\n        return True\n    # Missing space after period (e.g., \"word.Another\")\n    if re.search(r\"[A-Za-z]\\.[A-Za-z]\", val):\n        return True\n    return False",
+    "params": null,
+    "true_child": "leaf_error",
+    "false_child": "gnn_fd_provider_check",
+    "leaf_value": null
+  },
+  {
+    "node_id": "gnn_fd_provider_check",
+    "kind": "gnn",
+    "name": "gnn_fd_provider_check",
+    "code": null,
+    "params": null,
+    "true_child": "check_stateavg_pattern",
+    "false_child": "check_stateavg_pattern",
+    "leaf_value": null
+  },
+  {
+    "node_id": "check_stateavg_pattern",
+    "kind": "rule",
+    "name": "check_stateavg_pattern",
+    "code": "def rule_fn(row, col):\n    if col != 'Stateavg':\n        return False\n    import re\n    v = str(row.get('Stateavg', ''))\n    if v == '':\n        return True\n    # Expect state prefix (al or ak), underscore, then measure code slug\n    return re.match(r'^(al|ak)_[a-z0-9\\-]+$', v) is None",
+    "params": null,
+    "true_child": "leaf_error",
+    "false_child": "check_measurecode_validity",
+    "leaf_value": null
+  },
+  {
+    "node_id": "check_measurecode_validity",
+    "kind": "rule",
+    "name": "check_measurecode_validity",
+    "code": "def rule_fn(row, col):\n    if col != 'MeasureCode':\n        return False\n    valid = {\n        'scip-card-2','scip-inf-1','scip-inf-2','scip-inf-3','scip-inf-4','scip-inf-6',\n        'scip-vte-1','scip-vte-2',\n        'ami-1','ami-2','ami-3','ami-4','ami-5','ami-7a','ami-8a',\n        'hf-1','hf-2','hf-3','hf-4',\n        'pn-2','pn-3b','pn-4','pn-5c','pn-6','pn-7'\n    }\n    v = str(row.get('MeasureCode','')).strip().lower()\n    return v not in valid",
+    "params": null,
+    "true_child": "leaf_error",
+    "false_child": "check_measurename_single_letter_token",
+    "leaf_value": null
+  },
+  {
+    "node_id": "check_measurename_single_letter_token",
+    "kind": "rule",
+    "name": "check_measurename_single_letter_token",
+    "code": "def rule_fn(row, col):\n    if col != 'MeasureName':\n        return False\n    import re\n    v = str(row.get('MeasureName',''))\n    # Flag any single-letter word tokens except 'a' or 'i'\n    singles = re.findall(r'\\b([A-Za-z])\\b', v)\n    for s in singles:\n        if s.lower() not in {'a','i'}:\n            return True\n    return False",
+    "params": null,
+    "true_child": "leaf_error",
+    "false_child": "check_sample_format",
+    "leaf_value": null
+  },
+  {
+    "node_id": "check_sample_format",
+    "kind": "rule",
+    "name": "check_sample_format",
+    "code": "def rule_fn(row, col):\n    if col != 'Sample':\n        return False\n    import re\n    v = str(row.get('Sample',''))\n    return re.match(r'^(empty|[0-9]+ patients)$', v) is None",
+    "params": null,
+    "true_child": "leaf_error",
+    "false_child": "check_score_format",
+    "leaf_value": null
+  },
+  {
+    "node_id": "check_score_format",
+    "kind": "rule",
+    "name": "check_score_format",
+    "code": "def rule_fn(row, col):\n    if col != 'Score':\n        return False\n    import re\n    v = str(row.get('Score',''))\n    if v == 'empty':\n        return False\n    return re.match(r'^((100)|([0-9]{1,2}))%$', v) is None",
+    "params": null,
+    "true_child": "leaf_error",
+    "false_child": "leaf_ok",
+    "leaf_value": null
+  },
+  {
+    "node_id": "leaf_error",
+    "kind": "leaf",
+    "name": "",
+    "code": null,
+    "params": null,
+    "true_child": null,
+    "false_child": null,
+    "leaf_value": true
+  },
+  {
+    "node_id": "leaf_ok",
+    "kind": "leaf",
+    "name": "",
+    "code": null,
+    "params": null,
+    "true_child": null,
+    "false_child": null,
+    "leaf_value": false
+  }
+]
